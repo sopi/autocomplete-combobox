@@ -1,0 +1,22 @@
+<!--
+ - Created by piotrsobczak on 19.09.2018.
+ -->
+
+<aura:component description="lookupItem">
+    <aura:attribute name="value" type="String" />
+    <aura:attribute name="label" type="String" />
+    <aura:attribute name="originalLabel" type="String" />
+
+    <li role="presentation" class="slds-listbox__item" onclick="{!c.enrichEvent}">
+        <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+            <span class="slds-media__figure">
+                 <lightning:icon iconName="utility:check" size="x-small" class="slds-listbox__icon-selected" />
+            </span>
+            <span class="slds-media__body">
+              <span class="slds-truncate" title="{!v.label}">
+                <span><aura:unescapedHtml value="{!v.label}" /></span>
+              </span>
+            </span>
+        </div>
+    </li>
+</aura:component>

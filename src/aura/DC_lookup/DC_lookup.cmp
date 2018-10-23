@@ -1,0 +1,78 @@
+
+
+<aura:component description="DC_lookup" extends="c:DC_pageCommonBase">
+    <!-- Optionally in some upper component
+         <ltng:require
+        scripts="{!$Resource.loadash}"/> -->
+
+    <aura:attribute name="id" type="String" description="Id to distinguish component from others"/>
+    <aura:attribute name="items" type="Object" description="Provided items" required="true"/>
+    <aura:attribute name="foundItems" type="Object" description="Items after search" />
+    <aura:attribute name="containerClass" type="String" description="Optional wrapper class"/>
+    <aura:attribute name="value" type="String" description="Selected value"/>
+    <aura:attribute name="displayedValue" type="String" description="Displayed value"/>
+    <aura:attribute name="label" type="String" description="Label for input"/>
+    <aura:attribute name="onchange" type="Aura.Action" description="On input change handler"/>
+
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+
+    <aura:attribute name="isOpen" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.items}" action="{!c.doInit}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleMessageEvent}" />
+
+    <div class="{!'slds-form-element' + (v.containerClass ? ' ' + v.containerClass : '')}"
+         onclick="{!c.enrichEvent}">
+        <label class="slds-form-element__label" for="combobox">{!v.label}</label>
+        <div class="slds-form-element__control">
+            <div class="{!'slds-combobox_container' + (v.value ? ' slds-has-selection' : '')}">
+                <div class="{!'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click'
+                              + (v.isOpen ? ' slds-is-open' : '')}"
+                     aria-expanded="true"
+                     aria-haspopup="listbox"
+                     role="combobox">
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+
+                        <input type="text"
+                               class="{!'slds-input slds-combobox__input slds-combobox__input-value' +
+                                        (v.isOpen ? ' slds-has-focus' : '')}"
+                               id="combobox"
+                               aura:id="searchInput"
+                               aria-autocomplete="list" aria-controls="listbox"
+                               autoComplete="off"
+                               role="textbox"
+                               placeholder="Search"
+                               value="{!v.displayedValue}"
+                               disabled="{!v.disabled}"
+                               readonly="{!and(v.value, not(v.isOpen))}"
+                               onkeyup="{!c.search}"
+                               onfocus="{!c.initSearch}"
+                               onchange="{!c.onInputChange}"
+                        />
+                        <button class="{!'slds-button slds-button_icon slds-input__icon slds-input__icon_right'
+                                        + (and(v.value, !v.isOpen) ? '' : ' slds-hide')
+                                        + (v.disabled ? ' slds-hide' : '')}"
+                                title="Remove"
+                                onclick="{!c.clearSearch}">
+                            <lightning:icon iconName="utility:close" size="x-small" />
+                            <span class="slds-assistive-text">Remove selected option</span>
+                        </button>
+                        <span class="{!'slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right'
+                                        + (or(!v.value, v.isOpen) ? '' : ' slds-hide')}">
+                            <lightning:icon iconName="utility:search" size="x-small" />
+                        </span>
+                    </div>
+                    <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length slds-dropdown_fluid" role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation" onclick="{!c.handleSelection}">
+                            <aura:iteration items="{!v.foundItems}" var="item">
+                                <c:DC_lookupItem value="{!item.value}"
+                                                 label="{!item.label}"
+                                                 originalLabel="{!item.originalLabel}"/>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>
